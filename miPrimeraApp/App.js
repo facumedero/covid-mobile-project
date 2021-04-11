@@ -15,51 +15,54 @@ function MyStack() {
   );
 }
 
+
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       loading:false,
       country:[],
-      url:'https://api.covid19api.com/dayone/country/south-africa/status/confirmed'
+      url:'https://api.covid19api.com/countries'
     }
   }
   
 
   componentDidMount(){
-    this.getCountry();
-  }
-  getCountry = () =>{
-    //consulta con todos los paises formato:
-    // {
-    //  "Country": "Canada",
-    //  "Slug": "canada",
-    //  "ISO2": "CA"
-    // },
-    var requestOptions = {
-      method: 'GET',
-      redirect: 'follow'
-    };
-    
-    fetch("https://api.covid19api.com/countries", requestOptions)
-      .then(response => response.text())
-      .then(result =>console.log(result))
-      .catch(error => console.log('error', error))
-  
-    
-    
-    //this.setState({loading:true})
-    //console.log(fetch(this.state.url))
-
+    fetch("https://api.covid19api.com/countries")
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            isLoaded: true,
+            country: result.country
+          });
+        },
+        
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        }
+      )
   }
 
   render() {
-    return (
-      <NavigationContainer>
-        <MyStack />
+    const { error, isLoaded, items } = this.state;
+    if (error) {
+      //return <div>Error: {error.message}</div>;
+    } else if (!isLoaded) {
+      return <div>Loading ...</div>;
+    } else {
+      return (
+        <NavigationContainer>
+        <MyStack/>
       </NavigationContainer>
-    );
+      );
+    }
   }
 }
+  
+
 
 export default App;
