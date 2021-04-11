@@ -25,7 +25,10 @@ function HomeScreen({ navigation }) {
           <Picker.Item label="Brasil" value="Brasil" />
           
         </Picker>
-     
+        <Button
+        title="Go to Details..."
+        onPress={() => navigation.push('Details')}
+      />
       <Button
         title="Ir a otra Pagina"
         onPress={() => navigation.navigate('Details')}
@@ -42,7 +45,7 @@ function DetailsScreen({ navigation }) {
         title="Go to Details... again"
         onPress={() => navigation.push('Details')}
       />
-      <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
+      <Button title="Go to Home" onPress={() => navigation.push('Inicio')} />
       <Button title="Volver" onPress={() => navigation.goBack()} />
     </View>
   );
@@ -53,7 +56,7 @@ const Stack = createStackNavigator();
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator initialRouteName="Inicio">
         <Stack.Screen name="Inicio" component={HomeScreen} />
         <Stack.Screen name="Details" component={DetailsScreen} />
       </Stack.Navigator>
