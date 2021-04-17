@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, View, Text, Image, Picker, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 import image from "../assets/covid.gif";
 
 const Home = ({ navigation }) => {
-  const [selectedValue, setSelectedValue] = useState("");
+  const [loadingValue, setLoading] = useState(true);
+  const [countriesValue, setCountriesValue] = useState([]);
+  const url = "https://api.covid19api.com/countries";
 
   const styles = StyleSheet.create({
     container: {
@@ -39,19 +42,38 @@ const Home = ({ navigation }) => {
     },
   });
 
+  useEffect(() => {
+    fetch(url)
+      .then((res) => res.json())
+      .then((res) => {
+        setCountriesValue(res);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  });
+
+  if (loadingValue)
+    return (
+      <View style={{ flex: 1, padding: 24 }}>
+        <Text>Loading ...</Text>
+      </View>
+    );
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>COVID-19 information:</Text>
       <Image source={image} style={styles.image} />
-      <Text style={styles.text}>Select the desired country:</Text>
+      <Text style={styles.text}>Select the desired Countries:</Text>
       <Picker
         style={styles.piker}
         selectedValue={selectedValue}
         onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
       >
-        <Picker.Item label="Argentina" value="Argentina" />
-        <Picker.Item label="Afganistan" value="Afganistan" />
-        <Picker.Item label="Brasil" value="Brasil" />
+        {countriesValue.map((item) => (
+          <Picker.Item label={item.Country} value={item.Country} />
+        ))}
       </Picker>
       <Button
         title="Go to Details"
