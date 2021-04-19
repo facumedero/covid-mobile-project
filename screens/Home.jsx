@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, View, Text, Image, Picker, StyleSheet } from "react-native";
-import { View, Text } from "react-native";
+import ModalDropdown from 'react-native-modal-dropdown';
 import image from "../assets/covid.gif";
 
 const Home = ({ navigation }) => {
@@ -12,7 +12,7 @@ const Home = ({ navigation }) => {
     container: {
       flex: 1,
       alignItems: "center",
-      backgroundColor: "black",
+      backgroundColor: "black"
     },
     title: { fontSize: 20, color: "#fff" },
     image: { height: 200, width: 200 },
@@ -25,21 +25,21 @@ const Home = ({ navigation }) => {
       color: "#fff",
       fontSize: 20,
     },
-    piker: {
+    modalDropdown: {
       alignItems: "center",
       justifyContent: "center",
-      height: 50,
-      width: 200,
-      color: "#292929",
-      backgroundColor: "#fff",
+      height: 70,
+      width: 100,
+      color: "#a52a2a",
+      backgroundColor: "blue"
     },
     text: {
       color: "#fff",
       flex: 1,
       alignItems: "center",
       justifyContent: "center",
-      padding: 50,
-    },
+      padding: 5,
+    }
   });
 
   useEffect(() => {
@@ -57,24 +57,19 @@ const Home = ({ navigation }) => {
   if (loadingValue)
     return (
       <View style={{ flex: 1, padding: 24 }}>
-        <Text>Loading ...</Text>
+        <Text>Loading information...</Text>
       </View>
     );
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>COVID-19 information:</Text>
+      <ModalDropdown style={styles.modalDropdown}
+                    onSelect={() => navigation.navigate("Details" )}
+                    defaultValue={"Select Country"}
+                    options={countriesValue}
+     />
       <Image source={image} style={styles.image} />
-      <Text style={styles.text}>Select the desired Countries:</Text>
-      <Picker
-        style={styles.piker}
-        selectedValue={selectedValue}
-        onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
-      >
-        {countriesValue.map((item) => (
-          <Picker.Item label={item.Country} value={item.Country} />
-        ))}
-      </Picker>
       <Button
         title="Go to Details"
         onPress={() => navigation.navigate("Details")}
@@ -82,5 +77,6 @@ const Home = ({ navigation }) => {
     </View>
   );
 };
+
 
 export default Home;

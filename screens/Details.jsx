@@ -7,18 +7,25 @@ const Details = ({ navigation }) => {
       flex: 1,
       alignItems: "center",
       justifyContent: "center",
+      color: "#a52a2a"
     },
+    text: {
+      color: "black",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: 10
+    }
   });
 
   return (
     <View style={styles.containerDetails}>
-      <Text>Country: VARIABLE CON PAIS SELECCIONADO</Text>
-      <Text>New Confirmed:</Text>
-      <Text>Total Confirmed:</Text>
-      <Text>New Death:</Text>
-      <Text>Total Death:</Text>
-      <Text>New Recovered:</Text>
-      <Text>Total recovered:</Text><br></br>
+      <Text style={styles.text}>Country: </Text>
+      <Text style={styles.text}>New Confirmed:</Text>
+      <Text style={styles.text}>Total Confirmed:</Text>
+      <Text style={styles.text}>New Death:</Text>
+      <Text style={styles.text}>Total Death:</Text>
+      <Text style={styles.text} >New Recovered:</Text>
+      <Text style={styles.text}>Total recovered:</Text><br></br>
       <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
       <br></br>
       <Button title="Volver" onPress={() => navigation.goBack()} />
