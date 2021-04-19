@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, View, Text, StyleSheet } from "react-native";
 
-const Details = ({ navigation }) => {
+const Details = ({ navigation, route }) => {
   const styles = StyleSheet.create({
     containerDetails: {
       flex: 1,
@@ -17,9 +17,11 @@ const Details = ({ navigation }) => {
     }
   });
 
+  const { country } = route.params;
+
   return (
     <View style={styles.containerDetails}>
-      <Text style={styles.text}>Country: </Text>
+      <Text style={styles.text}>Country: { country }</Text>
       <Text style={styles.text}>New Confirmed:</Text>
       <Text style={styles.text}>Total Confirmed:</Text>
       <Text style={styles.text}>New Death:</Text>

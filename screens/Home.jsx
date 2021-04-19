@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, View, Text, Image, Picker, StyleSheet } from "react-native";
+import { Button, View, Text, Image, StyleSheet } from "react-native";
 import ModalDropdown from 'react-native-modal-dropdown';
 import image from "../assets/covid.gif";
 
@@ -42,6 +42,8 @@ const Home = ({ navigation }) => {
     }
   });
 
+  const countriesToString = countriesValue.map((c) => { return c.Country})
+
   useEffect(() => {
     fetch(url)
       .then((res) => res.json())
@@ -50,9 +52,10 @@ const Home = ({ navigation }) => {
         setLoading(false);
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error)
+        alert("Verifique su conexión")
       });
-  });
+  }, []);
 
   if (loadingValue)
     return (
@@ -64,10 +67,11 @@ const Home = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>COVID-19 information:</Text>
-      <ModalDropdown style={styles.modalDropdown}
-                    onSelect={() => navigation.navigate("Details" )}
-                    defaultValue={"Select Country"}
-                    options={countriesValue}
+      <ModalDropdown
+        style={styles.modalDropdown}
+        onSelect={(key, value) => navigation.navigate("Details", { country: value }) }
+        defaultValue={"Select Country"}
+        options={countriesToString}
      />
       <Image source={image} style={styles.image} />
       <Button
