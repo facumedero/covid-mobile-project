@@ -69,7 +69,7 @@ const Home = ({ navigation }) => {
       <Text style={styles.title}>COVID-19 information:</Text>
       <ModalDropdown
         style={styles.modalDropdown}
-        onSelect={(key, value) => navigation.navigate("Details", { country: value }) }
+        onSelect={(key, value) => navigation.navigate("Details", { name: value, code: countriesValue[key].ISO2}) }
         defaultValue={"Select Country"}
         options={countriesToString}
      />
