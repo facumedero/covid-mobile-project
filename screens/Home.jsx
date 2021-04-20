@@ -75,8 +75,13 @@ const Home = ({ navigation }) => {
      />
       <Image source={image} style={styles.image} />
       <Button
-        title="Go to Details"
+        title="Go to Argentina's data"
         onPress={() => navigation.navigate("Details", { name: "Argentina", code: "AR"})}
+      />
+      <br></br>
+       <Button
+        title=" Countries Favorites"
+        onPress={() => navigation.navigate("Favorites")}
       />
     </View>
   );

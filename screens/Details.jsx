@@ -60,7 +60,10 @@ const Details = ({ navigation, route }) => {
       <Text style={styles.text}>New Death: { today.Deaths - yestarday.Deaths } </Text>
       <Text style={styles.text}>Total Death: { today.Deaths } </Text>
       <Text style={styles.text} >New Recovered: { today.Recovered -yestarday.Recovered } </Text>
-      <Text style={styles.text}>Total recovered:{ today.Recovered } </Text><br></br>
+      <Text style={styles.text}>Total recovered:{ today.Recovered } </Text>
+      <br></br>
+      <Button title="Favorites Countrys" onPress={() => navigation.navigate("Favorites")} />
+      <br></br>
       <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
       <br></br>
       <Button title="Volver" onPress={() => navigation.goBack()} />
