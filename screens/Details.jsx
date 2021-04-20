@@ -29,7 +29,7 @@ const Details = ({ navigation, route }) => {
   const [yestarday, setYestarday] = useState({ date: moment().subtract(1, 'day').format('YYYY-MM-DD T00:00:00Z')});
 
   const url = "https://api.covid19api.com/live/country/" + country.code + "?from=" + yestarday.date + "&to=" + today.date
-  
+
   useEffect(() => {
     // Algunas veces devuelve falso, vaya a saber dios saber por qué
     fetch(url)

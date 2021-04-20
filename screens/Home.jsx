@@ -76,7 +76,7 @@ const Home = ({ navigation }) => {
       <Image source={image} style={styles.image} />
       <Button
         title="Go to Details"
-        onPress={() => navigation.navigate("Details")}
+        onPress={() => navigation.navigate("Details", { name: "Argentina", code: "AR"})}
       />
     </View>
   );
