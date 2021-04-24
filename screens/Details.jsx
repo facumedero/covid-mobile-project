@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Button, View, Text, StyleSheet } from "react-native";
+import {useRecoilState} from 'recoil';
+import { Button, View, Text, StyleSheet,TouchableOpacity } from "react-native";
+import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
+import {updateFavCountryISOFromStorage} from "../storage";
+import {favCountryISOListState} from "../atoms/favCountryISOListState";
 
 const Details = ({ navigation, route }) => {
   const styles = StyleSheet.create({
@@ -15,7 +19,12 @@ const Details = ({ navigation, route }) => {
       alignItems: "center",
       justifyContent: "center",
       padding: 10
-    }
+    },
+    favIconTouchableOpacity: {
+      position: 'absolute',
+      right: 20,
+      top: 30
+    },
   });
 
   const [loadingValue, setLoading] = useState(true);
@@ -27,7 +36,8 @@ const Details = ({ navigation, route }) => {
 
   const [today, setToday] = useState({ date: moment().format('YYYY-MM-DD T00:00:00Z')});
   const [yestarday, setYestarday] = useState({ date: moment().subtract(1, 'day').format('YYYY-MM-DD T00:00:00Z')});
-
+  const [currentCountryFavStatus, setCountryFavStatus] = useState(false);
+  const [favCountryISOList, setFavCountryISOList] = useRecoilState(favCountryISOListState)
   const url = "https://api.covid19api.com/live/country/" + country.code + "?from=" + yestarday.date + "&to=" + today.date
 
   useEffect(() => {
@@ -42,6 +52,8 @@ const Details = ({ navigation, route }) => {
       .catch((error) => {
         console.log(error)
         alert("Verifique su conexión")
+        //volver a home cuando no hay conexion
+        //navigation.navigate("Home")
       });
   }, []);
 
@@ -52,9 +64,23 @@ const Details = ({ navigation, route }) => {
       </View>
     );
 
+    const toggleCountryFavStatus = async () => {
+      const newFavStatus = !currentCountryFavStatus;
+      //verificar si el id "ISO2" se encuentra dentro de la lista de favoritos
+      updateFavCountryISOFromStorage(country.code, newFavStatus).then( r => setFavCountryISOList(r));
+      setCountryFavStatus(newFavStatus);
+  }
+
   return (
     <View style={styles.containerDetails}>
       <Text style={styles.text}>Country: { country.name } </Text>
+      <TouchableOpacity onPress={toggleCountryFavStatus} style={styles.favIconTouchableOpacity}>
+          <Icon
+            name={ currentCountryFavStatus === false ? "heart-o" : "heart" }
+            size={30}
+            color={ currentCountryFavStatus === false ? "#000" : "#F00" }
+          />
+       </TouchableOpacity>
       <Text style={styles.text}>New Confirmed: { today.Confirmed - yestarday.Confirmed } </Text>
       <Text style={styles.text}>Total Confirmed: { today.Confirmed } </Text>
       <Text style={styles.text}>New Death: { today.Deaths - yestarday.Deaths } </Text>

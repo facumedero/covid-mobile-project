@@ -1,26 +1,12 @@
 import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import Home from "./screens/Home";
-import Details from "./screens/Details";
-import Favorites from "./screens/Favorites";
+import { RecoilRoot } from 'recoil';
+import Dashboard from "./Dashboard";
 
-const Stack = createStackNavigator();
-
-function MyStack() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="Home" component={Home} />
-      <Stack.Screen name="Details" component={Details} />
-      <Stack.Screen name="Favorites" component={Favorites} />
-    </Stack.Navigator>
-  );
-}
 const App = ({}) => {
   return (
-    <NavigationContainer>
-      <MyStack />
-    </NavigationContainer>
+     <RecoilRoot>
+        <Dashboard/>
+      </RecoilRoot>
   );
 };
 

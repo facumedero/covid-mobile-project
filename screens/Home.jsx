@@ -78,7 +78,7 @@ const Home = ({ navigation }) => {
         title="Go to Argentina's data"
         onPress={() => navigation.navigate("Details", { name: "Argentina", code: "AR"})}
       />
-      <br></br>
+      <Text>{"\n"}</Text>
        <Button
         title=" Countries Favorites"
         onPress={() => navigation.navigate("Favorites")}
