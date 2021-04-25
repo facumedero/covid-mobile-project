@@ -1,12 +1,15 @@
 import React, { useState, useEffect,Component} from "react";
 import { Button, View, Text, StyleSheet,TouchableOpacity, Alert } from "react-native";
-import Icon from 'react-native-vector-icons/FontAwesome';
-import {updateFavCountryIdFromStorage} from "../storage";
+import {updateFavCountryISOFromStorage} from "../storage";
+import {useRecoilState} from 'recoil';
+import {favCountryISOListState} from "../atoms/favCountryISOListState";
 
 const Favorites = ({ navigation, route }) => {
-    //const [favCountryIdList, setFavCountryIdList] = (favCountryIdListState);
-    const [currentCountryUrl, setCountryUrl] = useState(null);
-    //estado que indica si el pais es favorito o no
+    //list of favorites countries
+    const [favCountryISOList, setFavCountryISOList] = useState({
+      favCountries: route.params.favCountries,
+    });
+    // state that indicates if the country is favorite
     const [currentCountryFavStatus, setCountryFavStatus] = useState(false);
 
     const styles = StyleSheet.create({
@@ -14,18 +17,12 @@ const Favorites = ({ navigation, route }) => {
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
-        color: "#a52a2a"
       },
       text: {
         color: "black",
         alignItems: "center",
         justifyContent: "center",
         padding: 10
-      },
-      favIconTouchableOpacity: {
-        position: 'absolute',
-        right: 20,
-        top: 40
       },
       container: {
          flex: 1,
@@ -59,22 +56,16 @@ const Favorites = ({ navigation, route }) => {
   const toggleCountryFavStatus = async () => {
       const newFavStatus = !currentCountryFavStatus;
       //verificar si el id "ISO2" se encuentra dentro de la lista de favoritos
-      //updateFavCountryIdFromStorage(getCountryIdFromUrl(currentCountryUrl), newFavStatus).then( r => setFavCountryIdList(r));
+      updateFavCountryISOFromStorage(country.code, newFavStatus).then( r => setFavCountryISOList(r),console.log("valor de r:"+r));
       setCountryFavStatus(newFavStatus);
   }
 
-
 return (
-    <View style={styles.containerDetails}>
+    <View style={styles.containerFavorites}>
       <Text style={styles.text}>My Favorites Countries: </Text>
       <Text>{"\n"}</Text>
-       <TouchableOpacity onPress={toggleCountryFavStatus} style={styles.favIconTouchableOpacity}>
-          <Icon
-            name={ currentCountryFavStatus === false ? "heart-o" : "heart" }
-            size={30}
-            color={ currentCountryFavStatus === false ? "#000" : "#F00" }
-          />
-       </TouchableOpacity>
+      <Text style={styles.text}>{"Estos son todos los codigos ISO de los paises favoritos:"}</Text>
+      <Text style={styles.text}>{favCountryISOList.favCountries}</Text>
        <Text>{"\n"}{"\n"}</Text>
       <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
       <Text>{"\n"}</Text>

@@ -5,6 +5,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 import {updateFavCountryISOFromStorage} from "../storage";
 import {favCountryISOListState} from "../atoms/favCountryISOListState";
+import { loadFavCountryISOListFromStorage } from "../storage";
+
 
 const Details = ({ navigation, route }) => {
   const styles = StyleSheet.create({
@@ -12,7 +14,6 @@ const Details = ({ navigation, route }) => {
       flex: 1,
       alignItems: "center",
       justifyContent: "center",
-      color: "#a52a2a"
     },
     text: {
       color: "black",
@@ -37,8 +38,12 @@ const Details = ({ navigation, route }) => {
   const [today, setToday] = useState({ date: moment().format('YYYY-MM-DD T00:00:00Z')});
   const [yestarday, setYestarday] = useState({ date: moment().subtract(1, 'day').format('YYYY-MM-DD T00:00:00Z')});
   const [currentCountryFavStatus, setCountryFavStatus] = useState(false);
-  const [favCountryISOList, setFavCountryISOList] = useRecoilState(favCountryISOListState)
-  const url = "https://api.covid19api.com/live/country/" + country.code + "?from=" + yestarday.date + "&to=" + today.date
+  const url = "https://api.covid19api.com/live/country/" + country.code + "?from=" + yestarday.date + "&to=" + today.date;
+  //listado de  codigos ISO de paises Favoritos
+  const [favCountryISOList, setFavCountryISOList] = useRecoilState(favCountryISOListState);
+  useEffect(() => {
+      loadFavCountryISOListFromStorage().then( r => setFavCountryISOList(r));
+  }, []);
 
   useEffect(() => {
     // Algunas veces devuelve falso, vaya a saber dios saber por qué
@@ -68,31 +73,35 @@ const Details = ({ navigation, route }) => {
       const newFavStatus = !currentCountryFavStatus;
       //verificar si el id "ISO2" se encuentra dentro de la lista de favoritos
       updateFavCountryISOFromStorage(country.code, newFavStatus).then( r => setFavCountryISOList(r));
+      //ACA ESTA EL ERROR
       setCountryFavStatus(newFavStatus);
+      //NO ESTA FUNCIONANDO EL SETEAR EL VALOR A TRUE, la variable currentCountryFavStatus
+      //tendria que quedar con TRUE y sigue en false despues del set de arriba
+
   }
 
   return (
     <View style={styles.containerDetails}>
-      <Text style={styles.text}>Country: { country.name } </Text>
-      <TouchableOpacity onPress={toggleCountryFavStatus} style={styles.favIconTouchableOpacity}>
-          <Icon
-            name={ currentCountryFavStatus === false ? "heart-o" : "heart" }
-            size={30}
-            color={ currentCountryFavStatus === false ? "#000" : "#F00" }
-          />
-       </TouchableOpacity>
-      <Text style={styles.text}>New Confirmed: { today.Confirmed - yestarday.Confirmed } </Text>
-      <Text style={styles.text}>Total Confirmed: { today.Confirmed } </Text>
-      <Text style={styles.text}>New Death: { today.Deaths - yestarday.Deaths } </Text>
-      <Text style={styles.text}>Total Death: { today.Deaths } </Text>
-      <Text style={styles.text} >New Recovered: { today.Recovered -yestarday.Recovered } </Text>
-      <Text style={styles.text}>Total recovered:{ today.Recovered } </Text>
-      <br></br>
-      <Button title="Favorites Countrys" onPress={() => navigation.navigate("Favorites")} />
-      <br></br>
-      <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
-      <br></br>
-      <Button title="Volver" onPress={() => navigation.goBack()} />
+        <Text style={styles.text}>Country: { country.name } </Text>
+        <TouchableOpacity onPress={toggleCountryFavStatus} style={styles.favIconTouchableOpacity}>
+            <Icon
+              name={ currentCountryFavStatus === false ? "heart-o" : "heart" }
+              size={30}
+              color={ currentCountryFavStatus === false ? "#000" : "#F00" }
+            />
+        </TouchableOpacity>
+        <Text style={styles.text}>New Confirmed: { today.Confirmed - yestarday.Confirmed } </Text>
+        <Text style={styles.text}>Total Confirmed: { today.Confirmed } </Text>
+        <Text style={styles.text}>New Death: { today.Deaths - yestarday.Deaths } </Text>
+        <Text style={styles.text}>Total Death: { today.Deaths } </Text>
+        <Text style={styles.text} >New Recovered: { today.Recovered -yestarday.Recovered } </Text>
+        <Text style={styles.text}>Total recovered:{ today.Recovered } </Text>
+        <br></br>
+        <Button title="Favorites Countrys" onPress={() => navigation.navigate("Favorites", { favCountries:favCountryISOList})} />
+        <br></br>
+        <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
+        <br></br>
+        <Button title="Volver" onPress={() => navigation.goBack()} />
       </View>
   );
 };

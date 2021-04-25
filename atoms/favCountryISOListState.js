@@ -1,6 +1,4 @@
-import {
-    atom
-} from 'recoil';
+import { atom } from 'recoil';
 
 export const favCountryISOListState = atom({
     key: 'favCountryISOListState',

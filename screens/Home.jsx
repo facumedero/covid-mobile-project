@@ -2,11 +2,19 @@ import React, { useState, useEffect } from "react";
 import { Button, View, Text, Image, StyleSheet } from "react-native";
 import ModalDropdown from 'react-native-modal-dropdown';
 import image from "../assets/covid.gif";
+import { favCountryISOListState } from "../atoms/favCountryISOListState";
+import { loadFavCountryISOListFromStorage } from "../storage";
+import {useRecoilState} from 'recoil';
 
 const Home = ({ navigation }) => {
   const [loadingValue, setLoading] = useState(true);
   const [countriesValue, setCountriesValue] = useState([]);
   const url = "https://api.covid19api.com/countries";
+  const countriesToString = countriesValue.map((c) => { return c.Country})
+  const [favCountryISOList, setFavCountryISOList] = useRecoilState(favCountryISOListState);
+  useEffect(() => {
+      loadFavCountryISOListFromStorage().then( r => setFavCountryISOList(r));
+  }, []);
 
   const styles = StyleSheet.create({
     container: {
@@ -41,8 +49,6 @@ const Home = ({ navigation }) => {
       padding: 5,
     }
   });
-
-  const countriesToString = countriesValue.map((c) => { return c.Country})
 
   useEffect(() => {
     fetch(url)
@@ -79,10 +85,14 @@ const Home = ({ navigation }) => {
         onPress={() => navigation.navigate("Details", { name: "Argentina", code: "AR"})}
       />
       <Text>{"\n"}</Text>
-       <Button
-        title=" Countries Favorites"
-        onPress={() => navigation.navigate("Favorites")}
-      />
+      {
+        (favCountryISOList !== null) && (
+          <Button
+            title=" Countries Favorites"
+            onPress={() => navigation.navigate("Favorites", { favCountries:favCountryISOList})}
+          />
+        )
+      }
     </View>
   );
 };
