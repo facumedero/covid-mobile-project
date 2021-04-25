@@ -1,5 +1,5 @@
 import React, { useState, useEffect,Component} from "react";
-import { Button, View, Text, StyleSheet,TouchableOpacity, Alert } from "react-native";
+import { Button, View, Text, StyleSheet, FlatList } from "react-native";
 import {updateFavCountryISOFromStorage} from "../storage";
 import {useRecoilState} from 'recoil';
 import {favCountryISOListState} from "../atoms/favCountryISOListState";
@@ -17,39 +17,18 @@ const Favorites = ({ navigation, route }) => {
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
+        backgroundColor: "#000"
       },
       text: {
-        color: "black",
+        color: "#FFF",
         alignItems: "center",
         justifyContent: "center",
-        padding: 10
-      },
-      container: {
-         flex: 1,
-         padding: 16,
-         paddingTop: 30,
-         backgroundColor: '#fff'
+        padding: 10,
+        fontSize: 20
       },
       head: {
         height: 40,
         backgroundColor: '#808B97'
-      },
-      text: {
-         margin: 6
-      },
-      row: {
-        flexDirection: 'row',
-        backgroundColor: '#FFF1C1'
-      },
-      btn: {
-        width: 58,
-        height: 18,
-        backgroundColor: '#78B7BB',
-        borderRadius: 2
-      },
-      btnText: {
-        textAlign: 'center',
-        color: '#fff'
       }
     });
 
@@ -64,13 +43,15 @@ return (
     <View style={styles.containerFavorites}>
       <Text style={styles.text}>My Favorites Countries: </Text>
       <Text>{"\n"}</Text>
-      <Text style={styles.text}>{"Estos son todos los codigos ISO de los paises favoritos:"}</Text>
-      <Text style={styles.text}>{favCountryISOList.favCountries}</Text>
+      <Text style={styles.text}>{"Codigos ISO2 de los paises favoritos:"}</Text>
+      <Text style={styles.text}>{favCountryISOList.favCountries.map(
+        (number) => <li>{favCountryISOList.favCountries[0]}</li> )}
+      </Text>
        <Text>{"\n"}{"\n"}</Text>
       <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
       <Text>{"\n"}</Text>
       <Button title="Volver" onPress={() => navigation.goBack()} />
-      </View>
+    </View>
   );
 };
 

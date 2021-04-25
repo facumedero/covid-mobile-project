@@ -17,7 +17,6 @@ export default function Dashboard(){
                             <Stack.Screen name="Favorites" component={Favorites} />
                         </Stack.Navigator>
                     </NavigationContainer>
-            }
         </>
     );
 }

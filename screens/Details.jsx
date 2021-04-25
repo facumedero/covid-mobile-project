@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {useRecoilState} from 'recoil';
-import { Button, View, Text, StyleSheet,TouchableOpacity } from "react-native";
+import { Button, View, Text, StyleSheet,TouchableOpacity, ActivityIndicator } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 import {updateFavCountryISOFromStorage} from "../storage";
@@ -14,12 +14,14 @@ const Details = ({ navigation, route }) => {
       flex: 1,
       alignItems: "center",
       justifyContent: "center",
+      backgroundColor: "#000"
     },
     text: {
-      color: "black",
+      color: "#FFF",
       alignItems: "center",
       justifyContent: "center",
-      padding: 10
+      padding: 10,
+      fontSize: 20
     },
     favIconTouchableOpacity: {
       position: 'absolute',
@@ -64,8 +66,8 @@ const Details = ({ navigation, route }) => {
 
   if (loadingValue)
     return (
-      <View style={{ flex: 1, padding: 24 }}>
-        <Text>Loading information...</Text>
+      <View style={{ flex: 1, padding: 20 }}>
+        <ActivityIndicator />
       </View>
     );
 
@@ -85,9 +87,9 @@ const Details = ({ navigation, route }) => {
         <Text style={styles.text}>Country: { country.name } </Text>
         <TouchableOpacity onPress={toggleCountryFavStatus} style={styles.favIconTouchableOpacity}>
             <Icon
-              name={ currentCountryFavStatus === false ? "heart-o" : "heart" }
-              size={30}
-              color={ currentCountryFavStatus === false ? "#000" : "#F00" }
+              name={ currentCountryFavStatus === false ? "star" : "star" }
+              size={40}
+              color={ currentCountryFavStatus === false ? "#FFF" : "#FF0" }
             />
         </TouchableOpacity>
         <Text style={styles.text}>New Confirmed: { today.Confirmed - yestarday.Confirmed } </Text>
@@ -96,11 +98,11 @@ const Details = ({ navigation, route }) => {
         <Text style={styles.text}>Total Death: { today.Deaths } </Text>
         <Text style={styles.text} >New Recovered: { today.Recovered -yestarday.Recovered } </Text>
         <Text style={styles.text}>Total recovered:{ today.Recovered } </Text>
-        <br></br>
+        <Text>{"\n"}</Text>
         <Button title="Favorites Countrys" onPress={() => navigation.navigate("Favorites", { favCountries:favCountryISOList})} />
-        <br></br>
+        <Text>{"\n"}</Text>
         <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
-        <br></br>
+        <Text>{"\n"}</Text>
         <Button title="Volver" onPress={() => navigation.goBack()} />
       </View>
   );

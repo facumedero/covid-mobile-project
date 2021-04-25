@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, View, Text, Image, StyleSheet } from "react-native";
+import { Button, View, Text, Image, StyleSheet, ActivityIndicator } from "react-native";
 import ModalDropdown from 'react-native-modal-dropdown';
 import image from "../assets/covid.gif";
 import { favCountryISOListState } from "../atoms/favCountryISOListState";
@@ -20,12 +20,17 @@ const Home = ({ navigation }) => {
     container: {
       flex: 1,
       alignItems: "center",
-      backgroundColor: "black"
+      backgroundColor: "#000"
     },
-    title: { fontSize: 20, color: "#fff" },
-    image: { height: 200, width: 200 },
+    title: {
+      fontSize: 20,
+      color: "#fff"
+    },
+    image: {
+      height: 250,
+      width: 250
+    },
     button: {
-      backgroundColor: "#a52a2a",
       padding: 7,
       marginTop: 10,
     },
@@ -38,7 +43,6 @@ const Home = ({ navigation }) => {
       justifyContent: "center",
       height: 70,
       width: 100,
-      color: "#a52a2a",
       backgroundColor: "blue"
     },
     text: {
@@ -65,8 +69,8 @@ const Home = ({ navigation }) => {
 
   if (loadingValue)
     return (
-      <View style={{ flex: 1, padding: 24 }}>
-        <Text>Loading information...</Text>
+      <View style={{ flex: 1, padding: 20 }}>
+        <ActivityIndicator />
       </View>
     );
 
