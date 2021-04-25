@@ -48,7 +48,6 @@ const Details = ({ navigation, route }) => {
   }, []);
 
   useEffect(() => {
-    // Algunas veces devuelve falso, vaya a saber dios saber por qué
     fetch(url)
       .then((res) => res.json())
       .then((res) => {
@@ -99,7 +98,7 @@ const Details = ({ navigation, route }) => {
         <Text style={styles.text} >New Recovered: { today.Recovered -yestarday.Recovered } </Text>
         <Text style={styles.text}>Total recovered:{ today.Recovered } </Text>
         <Text>{"\n"}</Text>
-        <Button title="Favorites Countrys" onPress={() => navigation.navigate("Favorites", { favCountries:favCountryISOList})} />
+        <Button title="Countries Favorites" onPress={() => navigation.navigate("Favorites", { favCountries:favCountryISOList})} />
         <Text>{"\n"}</Text>
         <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
         <Text>{"\n"}</Text>
