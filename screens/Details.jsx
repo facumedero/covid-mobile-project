@@ -33,8 +33,8 @@ const Details = ({ navigation, route }) => {
     },
     IconsShareSocialMedia: {
       position: 'absolute',
-      right: 20,
-      bottom: 40
+      bottom: 30,
+      left:530
     },
   });
 
@@ -51,7 +51,7 @@ const Details = ({ navigation, route }) => {
   const url = "https://api.covid19api.com/live/country/" + country.code + "?from=" + yestarday.date + "&to=" + today.date;
   //listado de  codigos ISO de paises Favoritos
   const [favCountryISOList, setFavCountryISOList] = useRecoilState(favCountryISOListState);
-  const shareUrl = 'http://github.com';
+  const shareUrl = 'https://github.com/facumedero';
   const title = 'GitHub';
 
   useEffect(() => {
@@ -94,6 +94,7 @@ const Details = ({ navigation, route }) => {
   return (
     <View style={styles.containerDetails}>
         <Text style={styles.text}>Country: { country.name } </Text>
+
         <TouchableOpacity onPress={toggleCountryFavStatus} style={styles.favIconTouchableOpacity}>
             <Icon
               name={ currentCountryFavStatus === false ? "star" : "star" }
@@ -101,6 +102,7 @@ const Details = ({ navigation, route }) => {
               color={ currentCountryFavStatus === false ? "#FFF" : "#FF0" }
             />
         </TouchableOpacity>
+
         <Text style={styles.text}>New Confirmed: { today.Confirmed - yestarday.Confirmed } </Text>
         <Text style={styles.text}>Total Confirmed: { today.Confirmed } </Text>
         <Text style={styles.text}>New Death: { today.Deaths - yestarday.Deaths } </Text>
@@ -108,6 +110,7 @@ const Details = ({ navigation, route }) => {
         <Text style={styles.text} >New Recovered: { today.Recovered -yestarday.Recovered } </Text>
         <Text style={styles.text}>Total recovered:{ today.Recovered } </Text>
         <Text>{"\n"}</Text>
+
         <Button title="Countries Favorites" onPress={() => navigation.navigate("Favorites", { favCountries:favCountryISOList})} />
         <Text>{"\n"}</Text>
         <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
@@ -115,54 +118,33 @@ const Details = ({ navigation, route }) => {
         <Button title="Volver" onPress={() => navigation.goBack()} />
         <View style={styles.containerDetails}>
 
-        <TouchableOpacity onPress={toggleCountryFavStatus} style={styles.IconsShareSocialMedia}>
+          <TouchableOpacity onPress={toggleCountryFavStatus} style={styles.IconsShareSocialMedia}>
 
-          <TwitterShareButton
-            url={shareUrl}
-            title={title}
-            className="Demo__some-network__share-button"
-          >
-            <TwitterIcon size={32} round />
-          </TwitterShareButton>
+            <TwitterShareButton url={shareUrl} title={title} >
+              <TwitterIcon size={32} round />
+            </TwitterShareButton>
 
-          <FacebookMessengerShareButton
-            url={shareUrl}
-            appId="521270401588372"
-            className="Demo__some-network__share-button"
-          >
-            <FacebookMessengerIcon size={32} round />
-          </FacebookMessengerShareButton>
+            <FacebookMessengerShareButton url={shareUrl} appId="521270401588372" >
+              <FacebookMessengerIcon size={32} round />
+            </FacebookMessengerShareButton>
 
-          <WhatsappShareButton
-            url={shareUrl}
-            title={title}
-            separator=":: "
-            className="Demo__some-network__share-button"
-          >
-            <WhatsappIcon size={32} round />
-          </WhatsappShareButton>
+            <WhatsappShareButton url={shareUrl} title={title} separator=": " >
+              <WhatsappIcon size={32} round />
+            </WhatsappShareButton>
 
-          <TelegramShareButton
-            url={shareUrl}
-            title={title}
-            className="Demo__some-network__share-button"
-          >
-            <TelegramIcon size={32} round />
-          </TelegramShareButton>
+            <TelegramShareButton url={shareUrl} title={title}>
+              <TelegramIcon size={32} round />
+            </TelegramShareButton>
 
-          <LinkedinShareButton url={shareUrl} className="Demo__some-network__share-button">
-            <LinkedinIcon size={32} round />
-          </LinkedinShareButton>
+            <LinkedinShareButton url={shareUrl} >
+              <LinkedinIcon size={32} round />
+            </LinkedinShareButton>
 
-          <EmailShareButton
-            url={shareUrl}
-            subject={title}
-            body="body"
-            className="Demo__some-network__share-button"
-          >
-            <EmailIcon size={32} round />
-          </EmailShareButton>
-        </TouchableOpacity>
+            <EmailShareButton url={shareUrl} subject={title} body="body">
+              <EmailIcon size={32} round />
+            </EmailShareButton>
+
+          </TouchableOpacity>
 
         </View>
       </View>
