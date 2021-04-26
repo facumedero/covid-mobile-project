@@ -63,7 +63,8 @@ const Home = ({ navigation }) => {
       })
       .catch((error) => {
         console.log(error)
-        alert("Verifique su conexión")
+        alert("Check your internet connection.")
+        //location("Home")
       });
   }, []);
 

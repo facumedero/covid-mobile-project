@@ -68,8 +68,8 @@ const Details = ({ navigation, route }) => {
       })
       .catch((error) => {
         console.log(error)
-        alert("Verifique su conexión")
-        //volver a home cuando no hay conexion?
+        alert("Check your internet connection.")
+        //location("Home")
       });
   }, []);
 
@@ -113,9 +113,8 @@ const Details = ({ navigation, route }) => {
 
         <Button title="Countries Favorites" onPress={() => navigation.navigate("Favorites", { favCountries:favCountryISOList})} />
         <Text>{"\n"}</Text>
-        <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
+        <Button title="Home" onPress={() => navigation.navigate("Home")} />
         <Text>{"\n"}</Text>
-        <Button title="Volver" onPress={() => navigation.goBack()} />
         <View style={styles.containerDetails}>
 
           <TouchableOpacity onPress={toggleCountryFavStatus} style={styles.IconsShareSocialMedia}>

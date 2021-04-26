@@ -48,9 +48,8 @@ return (
         (country) => <li> { country }</li> )}
       </Text>
        <Text>{"\n"}{"\n"}</Text>
-      <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
+      <Button title="Home" onPress={() => navigation.navigate("Home")} />
       <Text>{"\n"}</Text>
-      <Button title="Volver" onPress={() => navigation.goBack()} />
     </View>
   );
 };
