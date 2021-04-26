@@ -25,6 +25,7 @@
     "react-native-screens": "~2.15.2",
     "react-native-table-component": "^1.2.1",
     "react-native-web": "~0.13.12",
+    "react-share": "^4.4.0",
     "recoil": "^0.2.0"
   },
   "devDependencies": {

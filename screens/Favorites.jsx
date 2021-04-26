@@ -45,7 +45,7 @@ return (
       <Text>{"\n"}</Text>
       <Text style={styles.text}>{"Codigos ISO2 de los paises favoritos:"}</Text>
       <Text style={styles.text}>{favCountryISOList.favCountries.map(
-        (country) => <li> {country }</li> )}
+        (country) => <li> { country }</li> )}
       </Text>
        <Text>{"\n"}{"\n"}</Text>
       <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />

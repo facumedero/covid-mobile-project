@@ -6,6 +6,9 @@ import moment from 'moment';
 import {updateFavCountryISOFromStorage} from "../storage";
 import {favCountryISOListState} from "../atoms/favCountryISOListState";
 import { loadFavCountryISOListFromStorage } from "../storage";
+import {EmailShareButton, LinkedinShareButton,TelegramShareButton,
+        TwitterShareButton, WhatsappShareButton,EmailIcon,TwitterIcon, TelegramIcon,
+        LinkedinIcon,WhatsappIcon,FacebookMessengerIcon,FacebookMessengerShareButton } from "react-share";
 
 
 const Details = ({ navigation, route }) => {
@@ -28,6 +31,11 @@ const Details = ({ navigation, route }) => {
       right: 20,
       top: 30
     },
+    IconsShareSocialMedia: {
+      position: 'absolute',
+      right: 20,
+      bottom: 40
+    },
   });
 
   const [loadingValue, setLoading] = useState(true);
@@ -43,6 +51,9 @@ const Details = ({ navigation, route }) => {
   const url = "https://api.covid19api.com/live/country/" + country.code + "?from=" + yestarday.date + "&to=" + today.date;
   //listado de  codigos ISO de paises Favoritos
   const [favCountryISOList, setFavCountryISOList] = useRecoilState(favCountryISOListState);
+  const shareUrl = 'http://github.com';
+  const title = 'GitHub';
+
   useEffect(() => {
       loadFavCountryISOListFromStorage().then( r => setFavCountryISOList(r));
   }, []);
@@ -58,8 +69,7 @@ const Details = ({ navigation, route }) => {
       .catch((error) => {
         console.log(error)
         alert("Verifique su conexión")
-        //volver a home cuando no hay conexion
-        //navigation.navigate("Home")
+        //volver a home cuando no hay conexion?
       });
   }, []);
 
@@ -103,6 +113,58 @@ const Details = ({ navigation, route }) => {
         <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
         <Text>{"\n"}</Text>
         <Button title="Volver" onPress={() => navigation.goBack()} />
+        <View style={styles.containerDetails}>
+
+        <TouchableOpacity onPress={toggleCountryFavStatus} style={styles.IconsShareSocialMedia}>
+
+          <TwitterShareButton
+            url={shareUrl}
+            title={title}
+            className="Demo__some-network__share-button"
+          >
+            <TwitterIcon size={32} round />
+          </TwitterShareButton>
+
+          <FacebookMessengerShareButton
+            url={shareUrl}
+            appId="521270401588372"
+            className="Demo__some-network__share-button"
+          >
+            <FacebookMessengerIcon size={32} round />
+          </FacebookMessengerShareButton>
+
+          <WhatsappShareButton
+            url={shareUrl}
+            title={title}
+            separator=":: "
+            className="Demo__some-network__share-button"
+          >
+            <WhatsappIcon size={32} round />
+          </WhatsappShareButton>
+
+          <TelegramShareButton
+            url={shareUrl}
+            title={title}
+            className="Demo__some-network__share-button"
+          >
+            <TelegramIcon size={32} round />
+          </TelegramShareButton>
+
+          <LinkedinShareButton url={shareUrl} className="Demo__some-network__share-button">
+            <LinkedinIcon size={32} round />
+          </LinkedinShareButton>
+
+          <EmailShareButton
+            url={shareUrl}
+            subject={title}
+            body="body"
+            className="Demo__some-network__share-button"
+          >
+            <EmailIcon size={32} round />
+          </EmailShareButton>
+        </TouchableOpacity>
+
+        </View>
       </View>
   );
 };
