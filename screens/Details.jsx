@@ -92,7 +92,6 @@ const Details = ({ navigation, route }) => {
           </TouchableOpacity>
           )
         }
-
         <Text style={styles.text}>New Confirmed: { today.Confirmed - yestarday.Confirmed } </Text>
         <Text style={styles.text}>Total Confirmed: { today.Confirmed } </Text>
         <Text style={styles.text}>New Death: { today.Deaths - yestarday.Deaths } </Text>
@@ -107,7 +106,7 @@ const Details = ({ navigation, route }) => {
         <Text>{"\n"}</Text>
         <View style={styles.containerDetails}>
 
-          <TouchableOpacity onPress={toggleCountryFavStatus} style={styles.IconsShareSocialMedia}>
+          <TouchableOpacity style={styles.IconsShareSocialMedia}>
 
             <TwitterShareButton url={shareUrl} title={title} >
               <TwitterIcon size={32} round />

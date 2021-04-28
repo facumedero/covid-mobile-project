@@ -29,7 +29,7 @@ const Favorites = ({ navigation }) => {
         backgroundColor: '#808B97'
       }
     });
-    console.log(favCountryISOList);
+
     if ( favCountryISOList.length == 0 ) {
       return (
         <View style={styles.containerFavorites}>
