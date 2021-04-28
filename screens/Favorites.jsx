@@ -3,13 +3,11 @@ import { Button, View, Text, StyleSheet, FlatList } from "react-native";
 import { loadFavCountryISOListFromStorage } from "../storage";
 
 const Favorites = ({ navigation }) => {
-    //list of favorites countries
+
     const [favCountryISOList, setFavCountryISOList] = useState([]);
-    // state that indicates if the country is favorite
-    const [currentCountryFavStatus, setCountryFavStatus] = useState(false);
 
     useEffect(() => {
-      loadFavCountryISOListFromStorage().then( r => setFavCountryISOList(r) );
+      loadFavCountryISOListFromStorage().then( r => setFavCountryISOList(r));
   }, []);
 
     const styles = StyleSheet.create({
@@ -31,20 +29,28 @@ const Favorites = ({ navigation }) => {
         backgroundColor: '#808B97'
       }
     });
-
-return (
+    console.log(favCountryISOList);
+    if ( favCountryISOList.length == 0 ) {
+      return (
+        <View style={styles.containerFavorites}>
+          <Text style={styles.text}>You don't have favorites countries. </Text>
+          <Button title="Home" onPress={() => navigation.navigate("Home")} />
+        </View>
+      );
+    }
+    return(
     <View style={styles.containerFavorites}>
       <Text style={styles.text}>My Favorites Countries: </Text>
       <Text>{"\n"}</Text>
       <Text style={styles.text}>
         {
-        favCountryISOList.map((country) =>
-          <li key={country.code}>
-              <Button title={ country.name } onPress={() => navigation.navigate("Details",{country})}/>
-         </li>
-        )}
-      </Text>
-       <Text>{"\n"}{"\n"}</Text>
+            favCountryISOList.map((country) =>
+              <li key={country.code}>
+                  <Button title={ country.name } onPress={() => navigation.navigate("Details",{country})}/>
+            </li>
+            )
+        }</Text>
+      <Text>{"\n"}{"\n"}</Text>
       <Button title="Home" onPress={() => navigation.navigate("Home")} />
       <Text>{"\n"}</Text>
     </View>
