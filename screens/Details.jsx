@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {useRecoilState} from 'recoil';
 import { Button, View, Text, StyleSheet,TouchableOpacity, ActivityIndicator } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
-import {updateFavCountryISOFromStorage} from "../storage";
-import {favCountryISOListState} from "../atoms/favCountryISOListState";
-import { loadFavCountryISOListFromStorage } from "../storage";
+import {updateFavCountryISOFromStorage, getStatusCountry} from "../storage";
 import {EmailShareButton, LinkedinShareButton,TelegramShareButton,
         TwitterShareButton, WhatsappShareButton,EmailIcon,TwitterIcon, TelegramIcon,
         LinkedinIcon,WhatsappIcon,FacebookMessengerIcon,FacebookMessengerShareButton } from "react-share";
-
 
 const Details = ({ navigation, route }) => {
   const styles = StyleSheet.create({
@@ -47,15 +43,13 @@ const Details = ({ navigation, route }) => {
 
   const [today, setToday] = useState({ date: moment().format('YYYY-MM-DD T00:00:00Z')});
   const [yestarday, setYestarday] = useState({ date: moment().subtract(1, 'day').format('YYYY-MM-DD T00:00:00Z')});
-  const [currentCountryFavStatus, setCountryFavStatus] = useState(false);
+  const [currentCountryFavStatus, setCountryFavStatus] = useState(null);
   const url = "https://api.covid19api.com/live/country/" + country.code + "?from=" + yestarday.date + "&to=" + today.date;
-  //listado de  codigos ISO de paises Favoritos
-  const [favCountryISOList, setFavCountryISOList] = useRecoilState(favCountryISOListState);
   const shareUrl = 'https://github.com/facumedero';
   const title = 'GitHub';
 
   useEffect(() => {
-      loadFavCountryISOListFromStorage().then( r => setFavCountryISOList(r));
+      getStatusCountry(country).then( r => setCountryFavStatus(r));
   }, []);
 
   useEffect(() => {
@@ -81,27 +75,23 @@ const Details = ({ navigation, route }) => {
     );
 
     const toggleCountryFavStatus = async () => {
-      const newFavStatus = !currentCountryFavStatus;
-      //verificar si el id "ISO2" se encuentra dentro de la lista de favoritos
-      updateFavCountryISOFromStorage(country.code, newFavStatus).then( r => setFavCountryISOList(r));
-      //ACA ESTA EL ERROR
-      setCountryFavStatus(newFavStatus);
-      //NO ESTA FUNCIONANDO EL SETEAR EL VALOR A TRUE, la variable currentCountryFavStatus
-      //tendria que quedar con TRUE y sigue en false despues del set de arriba
-
-  }
+      updateFavCountryISOFromStorage(country, currentCountryFavStatus).then(setCountryFavStatus(!currentCountryFavStatus));
+    }
 
   return (
     <View style={styles.containerDetails}>
         <Text style={styles.text}>Country: { country.name } </Text>
-
-        <TouchableOpacity onPress={toggleCountryFavStatus} style={styles.favIconTouchableOpacity}>
-            <Icon
-              name={ currentCountryFavStatus === false ? "star" : "star" }
-              size={40}
-              color={ currentCountryFavStatus === false ? "#FFF" : "#FF0" }
-            />
-        </TouchableOpacity>
+        {
+          (currentCountryFavStatus !== null ) && (
+          <TouchableOpacity onPress={toggleCountryFavStatus} style={styles.favIconTouchableOpacity}>
+              <Icon
+                name={ currentCountryFavStatus === false ? "star" : "star" }
+                size={40}
+                color={ currentCountryFavStatus === false ? "#FFF" : "#FF0" }
+              />
+          </TouchableOpacity>
+          )
+        }
 
         <Text style={styles.text}>New Confirmed: { today.Confirmed - yestarday.Confirmed } </Text>
         <Text style={styles.text}>Total Confirmed: { today.Confirmed } </Text>
@@ -111,7 +101,7 @@ const Details = ({ navigation, route }) => {
         <Text style={styles.text}>Total recovered:{ today.Recovered } </Text>
         <Text>{"\n"}</Text>
 
-        <Button title="Countries Favorites" onPress={() => navigation.navigate("Favorites", { favCountries:favCountryISOList})} />
+        <Button title="Countries Favorites" onPress={() => navigation.navigate("Favorites")} />
         <Text>{"\n"}</Text>
         <Button title="Home" onPress={() => navigation.navigate("Home")} />
         <Text>{"\n"}</Text>
