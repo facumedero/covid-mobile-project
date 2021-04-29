@@ -46,7 +46,7 @@ const Favorites = ({ navigation }) => {
         {
             favCountryISOList.map((country) =>
               <li key={country.code}>
-                  <Button title={ country.name } onPress={() => navigation.navigate("Details",{country})}/>
+                  <Button title={ country.name } onPress={() => navigation.navigate("Details",{ name: country.name ,code: country.code})}/>
             </li>
             )
         }</Text>
