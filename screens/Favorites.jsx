@@ -6,7 +6,7 @@ const Favorites = ({ navigation }) => {
 
     const [favCountryISOList, setFavCountryISOList] = useState([]);
 
-    useEffect(() => {
+    useEffect( () => {
       loadFavCountryISOListFromStorage().then( r => setFavCountryISOList(r));
   }, []);
 
@@ -34,7 +34,7 @@ const Favorites = ({ navigation }) => {
       return (
         <View style={styles.containerFavorites}>
           <Text style={styles.text}>You don't have favorites countries. </Text>
-          <Button title="Home" onPress={() => navigation.navigate("Home")} />
+          <Button title="Home" onPress={() => navigation.navigate("Home")}></Button>
         </View>
       );
     }
@@ -46,12 +46,14 @@ const Favorites = ({ navigation }) => {
         {
             favCountryISOList.map((country) =>
               <li key={country.code}>
-                  <Button title={ country.name } onPress={() => navigation.navigate("Details",{ name: country.name ,code: country.code})}/>
+                  <Button title={ country.name } onPress={() => { navigation.navigate("Details",
+                    { name: country.name ,code: country.code}) }}>
+                  </Button>
             </li>
             )
         }</Text>
       <Text>{"\n"}{"\n"}</Text>
-      <Button title="Home" onPress={() => navigation.navigate("Home")} />
+      <Button title="Home" onPress={() => navigation.navigate("Home")}></Button>
       <Text>{"\n"}</Text>
     </View>
   );

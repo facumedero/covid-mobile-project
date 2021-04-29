@@ -44,7 +44,7 @@ const Details = ({ navigation, route }) => {
   const [today, setToday] = useState({ date: moment().format('YYYY-MM-DD T00:00:00Z')});
   const [yestarday, setYestarday] = useState({ date: moment().subtract(1, 'day').format('YYYY-MM-DD T00:00:00Z')});
   const [currentCountryFavStatus, setCountryFavStatus] = useState(null);
-  const url = "https://api.covid19api.com/live/country/" + country.code + "?from=" + yestarday.date + "&to=" + today.date;
+  const url = "https://api.covid19api.com/live/country/" + route.params.code + "?from=" + yestarday.date + "&to=" + today.date;
   const shareUrl = url;
   const title = 'Country Data: '+ country.name;
 
@@ -57,7 +57,7 @@ const Details = ({ navigation, route }) => {
       .then((res) => res.json())
       .then((res) => {
         setYestarday(res[0]);
-        setToday(res[1])
+        setToday(res[1]);
         setLoading(false);
       })
       .catch((error) => {
@@ -80,7 +80,7 @@ const Details = ({ navigation, route }) => {
 
   return (
     <View style={styles.containerDetails}>
-        <Text style={styles.text}>Country: { country.name } </Text>
+        <Text style={styles.text}>Country: { route.params.name } </Text>
         {
           (currentCountryFavStatus !== null ) && (
           <TouchableOpacity onPress={toggleCountryFavStatus} style={styles.favIconTouchableOpacity}>
