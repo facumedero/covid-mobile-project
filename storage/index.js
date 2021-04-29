@@ -22,8 +22,8 @@ export const updateFavCountryISOFromStorage = async (country, newFavStatus) => {
     if (!newFavStatus) {
         favCountriesJSON.ids.push(country);
     } else {
-        //falla aca, no se puede comparar arreglos con el filter
-        favCountriesJSON.ids = favCountriesJSON.ids.filter((value) => {return value !== country} );
+        //falla aca, no se puede comparar objetos con el filter
+        favCountriesJSON.ids = favCountriesJSON.ids.filter((value) => {return value.code !== country.code} );
     }
     await AsyncStorage.setItem('@favCountriesJSON', JSON.stringify(favCountriesJSON), ()=>{});
     return favCountriesJSON.ids;
