@@ -45,8 +45,8 @@ const Details = ({ navigation, route }) => {
   const [yestarday, setYestarday] = useState({ date: moment().subtract(1, 'day').format('YYYY-MM-DD T00:00:00Z')});
   const [currentCountryFavStatus, setCountryFavStatus] = useState(null);
   const url = "https://api.covid19api.com/live/country/" + country.code + "?from=" + yestarday.date + "&to=" + today.date;
-  const shareUrl = 'https://github.com/facumedero';
-  const title = 'GitHub';
+  const shareUrl = url;
+  const title = 'Country Data: '+ country.name;
 
   useEffect(() => {
       getStatusCountry(country).then( r => setCountryFavStatus(r));
@@ -116,7 +116,7 @@ const Details = ({ navigation, route }) => {
               <FacebookMessengerIcon size={32} round />
             </FacebookMessengerShareButton>
 
-            <WhatsappShareButton url={shareUrl} title={title} separator=": " >
+            <WhatsappShareButton url={shareUrl} title={title} separator=" " >
               <WhatsappIcon size={32} round />
             </WhatsappShareButton>
 
