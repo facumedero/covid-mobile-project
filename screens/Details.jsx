@@ -13,7 +13,10 @@ const Details = ({ navigation, route }) => {
       flex: 1,
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: "#000"
+      backgroundColor: "#000",
+      flexDirection: 'column',
+      justifyContent: 'center',
+      padding:10
     },
     text: {
       color: "#FFF",
@@ -56,16 +59,24 @@ const Details = ({ navigation, route }) => {
     fetch(url)
       .then((res) => res.json())
       .then((res) => {
-        setBeforeYesterday(res[0]);
-        setYesterday(res[1]);
-        setLoading(false);
+        if (res.length > 0) {
+          setBeforeYesterday(res[0]);
+          setYesterday(res[1]);
+          setLoading(false);
+        } else {
+          handleAlertAndNavigate("Something does not work in the covid19api service")
+        }
       })
       .catch((error) => {
         console.log(error)
-        alert("Check your internet connection.")
-        navigation.navigate("Home")
+        handleAlertAndNavigate("Something is wrong.Check your internet connection")
       });
   }, []);
+
+  const handleAlertAndNavigate = (text) => {
+    alert(text)
+    navigation.navigate("Home")
+  }
 
   const toggleCountryFavStatus = async () => {
     updateFavCountryISOFromStorage(country, currentCountryFavStatus).then(setCountryFavStatus(!currentCountryFavStatus));
