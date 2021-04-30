@@ -41,10 +41,10 @@ const Details = ({ navigation, route }) => {
     code: route.params.code
   })
 
-  const [today, setToday] = useState({ date: moment().format('YYYY-MM-DD T00:00:00Z')});
-  const [yestarday, setYestarday] = useState({ date: moment().subtract(1, 'day').format('YYYY-MM-DD T00:00:00Z')});
+  const [yesterday, setYesterday] = useState({ date: moment().subtract(1, 'day').format('YYYY-MM-DD T00:00:00Z')});
+  const [beforeYesterday, setBeforeYesterday] = useState({ date: moment().subtract(2, 'day').format('YYYY-MM-DD T00:00:00Z')});
   const [currentCountryFavStatus, setCountryFavStatus] = useState(null);
-  const url = "https://api.covid19api.com/live/country/" + route.params.code + "?from=" + yestarday.date + "&to=" + today.date;
+  const url = "https://api.covid19api.com/total/country/" + route.params.code + "?from=" + beforeYesterday.date + "&to=" + yesterday.date;
   const shareUrl = url;
   const title = 'Country Data: '+ country.name;
 
@@ -56,16 +56,20 @@ const Details = ({ navigation, route }) => {
     fetch(url)
       .then((res) => res.json())
       .then((res) => {
-        setYestarday(res[0]);
-        setToday(res[1]);
+        setBeforeYesterday(res[0]);
+        setYesterday(res[1]);
         setLoading(false);
       })
       .catch((error) => {
         console.log(error)
         alert("Check your internet connection.")
-        //location("Home")
+        navigation.navigate("Home")
       });
   }, []);
+
+  const toggleCountryFavStatus = async () => {
+    updateFavCountryISOFromStorage(country, currentCountryFavStatus).then(setCountryFavStatus(!currentCountryFavStatus));
+  }
 
   if (loadingValue)
     return (
@@ -73,10 +77,6 @@ const Details = ({ navigation, route }) => {
         <ActivityIndicator />
       </View>
     );
-
-    const toggleCountryFavStatus = async () => {
-      updateFavCountryISOFromStorage(country, currentCountryFavStatus).then(setCountryFavStatus(!currentCountryFavStatus));
-    }
 
   return (
     <View style={styles.containerDetails}>
@@ -92,12 +92,24 @@ const Details = ({ navigation, route }) => {
           </TouchableOpacity>
           )
         }
-        <Text style={styles.text}>New Confirmed: { today.Confirmed - yestarday.Confirmed } </Text>
-        <Text style={styles.text}>Total Confirmed: { today.Confirmed } </Text>
-        <Text style={styles.text}>New Death: { today.Deaths - yestarday.Deaths } </Text>
-        <Text style={styles.text}>Total Death: { today.Deaths } </Text>
-        <Text style={styles.text} >New Recovered: { today.Recovered -yestarday.Recovered } </Text>
-        <Text style={styles.text}>Total recovered:{ today.Recovered } </Text>
+        <Text style={styles.text}>
+          New Confirmed: { (yesterday.Confirmed - beforeYesterday.Confirmed) > 0 ? (yesterday.Confirmed - beforeYesterday.Confirmed) : 0 }
+        </Text>
+        <Text style={styles.text}>
+          Total Confirmed: { yesterday.Confirmed }
+        </Text>
+        <Text style={styles.text}>
+          New Death: { (yesterday.Deaths - beforeYesterday.Deaths) > 0 ? (yesterday.Deaths - beforeYesterday.Deaths) : 0 }
+        </Text>
+        <Text style={styles.text}>
+          Total Death: { yesterday.Deaths }
+        </Text>
+        <Text style={styles.text}>
+          New Recovered: { (yesterday.Recovered - beforeYesterday.Recovered) > 0 ? (yesterday.Recovered - beforeYesterday.Recovered) : 0 }
+        </Text>
+        <Text style={styles.text}>
+          Total recovered:{ yesterday.Recovered }
+        </Text>
         <Text>{"\n"}</Text>
 
         <Button title="Countries Favorites" onPress={() => navigation.navigate("Favorites")} />
