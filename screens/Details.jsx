@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, View, Text, StyleSheet,TouchableOpacity, ActivityIndicator } from "react-native";
+import { Button, View, StyleSheet,TouchableOpacity, ActivityIndicator } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 import {updateFavCountryISOFromStorage, getStatusCountry} from "../storage";
@@ -13,16 +13,12 @@ const Details = ({ navigation, route }) => {
       flex: 1,
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: "#000"
+      backgroundColor: "#000",
+      flexDirection: 'column',
+      justifyContent: 'center',
+      padding:10
     },
-    text: {
-      color: "#FFF",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: 10,
-      fontSize: 20
-    },
-    favIconTouchableOpacity: {
+     favIconTouchableOpacity: {
       position: 'absolute',
       right: 20,
       top: 30
@@ -42,11 +38,16 @@ const Details = ({ navigation, route }) => {
   })
 
   const [today, setToday] = useState({ date: moment().format('YYYY-MM-DD T00:00:00Z')});
-  const [yestarday, setYestarday] = useState({ date: moment().subtract(1, 'day').format('YYYY-MM-DD T00:00:00Z')});
+  const [yesterday, setyesterday] = useState({ date: moment().subtract(1, 'day').format('YYYY-MM-DD T00:00:00Z')});
   const [currentCountryFavStatus, setCountryFavStatus] = useState(null);
-  const url = "https://api.covid19api.com/live/country/" + route.params.code + "?from=" + yestarday.date + "&to=" + today.date;
+  const url = "https://api.covid19api.com/live/country/" + route.params.code + "?from=" + yesterday.date + "&to=" + today.date;
   const shareUrl = url;
   const title = 'Country Data: '+ country.name;
+  const [errorValue, setErrorValue] = useState(null);
+
+  const toggleCountryFavStatus = async () => {
+    updateFavCountryISOFromStorage(country, currentCountryFavStatus).then(setCountryFavStatus(!currentCountryFavStatus));
+  }
 
   useEffect(() => {
       getStatusCountry(country).then( r => setCountryFavStatus(r));
@@ -56,14 +57,16 @@ const Details = ({ navigation, route }) => {
     fetch(url)
       .then((res) => res.json())
       .then((res) => {
-        setYestarday(res[0]);
+        setyesterday(res[0]);
         setToday(res[1]);
         setLoading(false);
       })
       .catch((error) => {
         console.log(error)
-        alert("Check your internet connection.")
-        //location("Home")
+        alert(
+          "Something is wrong.Check your internet connection",
+            { onPress: () => navigation.navigate("Home") }
+        );
       });
   }, []);
 
@@ -74,13 +77,9 @@ const Details = ({ navigation, route }) => {
       </View>
     );
 
-    const toggleCountryFavStatus = async () => {
-      updateFavCountryISOFromStorage(country, currentCountryFavStatus).then(setCountryFavStatus(!currentCountryFavStatus));
-    }
-
   return (
     <View style={styles.containerDetails}>
-        <Text style={styles.text}>Country: { route.params.name } </Text>
+        <Button title={"Country: "+(route.params.name)}> </Button>
         {
           (currentCountryFavStatus !== null ) && (
           <TouchableOpacity onPress={toggleCountryFavStatus} style={styles.favIconTouchableOpacity}>
@@ -92,18 +91,16 @@ const Details = ({ navigation, route }) => {
           </TouchableOpacity>
           )
         }
-        <Text style={styles.text}>New Confirmed: { today.Confirmed - yestarday.Confirmed } </Text>
-        <Text style={styles.text}>Total Confirmed: { today.Confirmed } </Text>
-        <Text style={styles.text}>New Death: { today.Deaths - yestarday.Deaths } </Text>
-        <Text style={styles.text}>Total Death: { today.Deaths } </Text>
-        <Text style={styles.text} >New Recovered: { today.Recovered -yestarday.Recovered } </Text>
-        <Text style={styles.text}>Total recovered:{ today.Recovered } </Text>
-        <Text>{"\n"}</Text>
+        <li><Button title={"New Confirmed:" + (today.Confirmed - yesterday.Confirmed)} > </Button></li>
+        <li><Button title={"Total Confirmed: "+ (today.Confirmed) }> </Button></li>
+        <li><Button title={"New Death: " + (today.Deaths - yesterday.Deaths)  }></Button></li>
+        <li><Button title={"Total Death: " + (today.Deaths )}> </Button></li>
+        <li><Button title={"New Recovered: "+( today.Recovered -yesterday.Recovered)} > </Button></li>
+        <li><Button title={"Total recovered: " +(today.Recovered)}></Button></li>
 
-        <Button title="Countries Favorites" onPress={() => navigation.navigate("Favorites")} />
-        <Text>{"\n"}</Text>
-        <Button title="Home" onPress={() => navigation.navigate("Home")} />
-        <Text>{"\n"}</Text>
+
+        <li><Button title="Countries Favorites" onPress={() => navigation.navigate("Favorites")} /></li>
+        <li><Button title="Home" onPress={() => navigation.navigate("Home")} /></li>
         <View style={styles.containerDetails}>
 
           <TouchableOpacity style={styles.IconsShareSocialMedia}>

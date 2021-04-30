@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, View, Text, Image, StyleSheet, ActivityIndicator } from "react-native";
+import { Button, View, Image, StyleSheet, ActivityIndicator, Picker } from "react-native";
 import ModalDropdown from 'react-native-modal-dropdown';
 import image from "../assets/covid.gif";
 import { favCountryISOListState } from "../atoms/favCountryISOListState";
@@ -12,8 +12,29 @@ const Home = ({ navigation }) => {
   const url = "https://api.covid19api.com/countries";
   const countriesToString = countriesValue.map((c) => { return c.Country})
   const [favCountryISOList, setFavCountryISOList] = useRecoilState(favCountryISOListState);
+  const [errorValue, setErrorValue] = useState(null);
+
   useEffect(() => {
       loadFavCountryISOListFromStorage().then( r => setFavCountryISOList(r));
+  }, []);
+
+  useEffect(() => {
+    fetch(url)
+      .then((res) => res.json())
+      .then((res) => {
+        setCountriesValue(res);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setErrorValue(true);
+        alert(
+          "Something is wrong.Check your internet",
+          [
+            { onPress: () => navigation.navigate("Home") }
+          ]
+        );
+      });
   }, []);
 
   const styles = StyleSheet.create({
@@ -30,43 +51,14 @@ const Home = ({ navigation }) => {
       height: 250,
       width: 250
     },
-    button: {
-      padding: 7,
-      marginTop: 10,
-    },
-    buttonText: {
-      color: "#fff",
-      fontSize: 20,
-    },
     modalDropdown: {
       alignItems: "center",
       justifyContent: "center",
-      height: 70,
-      width: 100,
-      backgroundColor: "blue"
-    },
-    text: {
-      color: "#fff",
-      flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
-      padding: 5,
+      height: 100,
+      width: 200,
+      backgroundColor: "#2196f3",
     }
   });
-
-  useEffect(() => {
-    fetch(url)
-      .then((res) => res.json())
-      .then((res) => {
-        setCountriesValue(res);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.log(error)
-        alert("Check your internet connection.")
-        //location("Home")
-      });
-  }, []);
 
   if (loadingValue)
     return (
@@ -75,13 +67,22 @@ const Home = ({ navigation }) => {
       </View>
     );
 
+  if(errorValue !== null){
+    return (
+      <View style={styles.container}>
+        <Button
+        title="Go to Argentina's data"
+        onPress={() => navigation.navigate("Details", { name: "Argentina", code: "AR"})}
+      />
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>COVID-19 information:</Text>
       <ModalDropdown
         style={styles.modalDropdown}
         onSelect={(key, value) => navigation.navigate("Details", { name: value, code: countriesValue[key].ISO2}) }
-        defaultValue={"Select Country"}
+        defaultValue={"SELECT COUNTRY HERE"}
         options={countriesToString}
      />
       <Image source={image} style={styles.image} />
@@ -89,13 +90,13 @@ const Home = ({ navigation }) => {
         title="Go to Argentina's data"
         onPress={() => navigation.navigate("Details", { name: "Argentina", code: "AR"})}
       />
-      <Text>{"\n"}</Text>
+
       {
         (favCountryISOList !== null) && (
-          <Button
+          <li> <Button
             title=" Countries Favorites"
             onPress={() => navigation.navigate("Favorites", { favCountries:favCountryISOList})}
-          />
+          /></li>
         )
       }
     </View>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect,Component} from "react";
-import { Button, View, Text, StyleSheet, FlatList } from "react-native";
+import { Button, View, StyleSheet, FlatList } from "react-native";
 import { loadFavCountryISOListFromStorage } from "../storage";
 
 const Favorites = ({ navigation }) => {
@@ -17,13 +17,6 @@ const Favorites = ({ navigation }) => {
         justifyContent: "center",
         backgroundColor: "#000"
       },
-      text: {
-        color: "#FFF",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 10,
-        fontSize: 20
-      },
       head: {
         height: 40,
         backgroundColor: '#808B97'
@@ -33,16 +26,13 @@ const Favorites = ({ navigation }) => {
     if ( favCountryISOList.length == 0 ) {
       return (
         <View style={styles.containerFavorites}>
-          <Text style={styles.text}>You don't have favorites countries. </Text>
+          <li><Button title={"You don't have favorites countries"}> </Button></li>
           <Button title="Home" onPress={() => navigation.navigate("Home")}></Button>
         </View>
       );
     }
     return(
     <View style={styles.containerFavorites}>
-      <Text style={styles.text}>My Favorites Countries: </Text>
-      <Text>{"\n"}</Text>
-      <Text style={styles.text}>
         {
             favCountryISOList.map((country) =>
               <li key={country.code}>
@@ -51,10 +41,10 @@ const Favorites = ({ navigation }) => {
                   </Button>
             </li>
             )
-        }</Text>
-      <Text>{"\n"}{"\n"}</Text>
-      <Button title="Home" onPress={() => navigation.navigate("Home")}></Button>
-      <Text>{"\n"}</Text>
+        }
+
+<li><Button title="Home" onPress={() => navigation.navigate("Home")}></Button></li>
+
     </View>
   );
 };
