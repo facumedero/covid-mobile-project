@@ -1,64 +1,107 @@
-import React, { useState } from "react";
-import { Button, View, Text, Image, Picker, StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import { Button, View, Image, StyleSheet, ActivityIndicator, Picker } from "react-native";
+import ModalDropdown from 'react-native-modal-dropdown';
 import image from "../assets/covid.gif";
+import { favCountryISOListState } from "../atoms/favCountryISOListState";
+import { loadFavCountryISOListFromStorage } from "../storage";
+import {useRecoilState} from 'recoil';
 
 const Home = ({ navigation }) => {
-  const [selectedValue, setSelectedValue] = useState("");
+  const [loadingValue, setLoading] = useState(true);
+  const [countriesValue, setCountriesValue] = useState([]);
+  const url = "https://api.covid19api.com/countries";
+  const countriesToString = countriesValue.map((c) => { return c.Country})
+  const [favCountryISOList, setFavCountryISOList] = useRecoilState(favCountryISOListState);
+  const [errorValue, setErrorValue] = useState(null);
+
+  useEffect(() => {
+      loadFavCountryISOListFromStorage().then( r => setFavCountryISOList(r));
+  }, []);
+
+  useEffect(() => {
+    fetch(url)
+      .then((res) => res.json())
+      .then((res) => {
+        setCountriesValue(res);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setErrorValue(true);
+        alert(
+          "Something is wrong.Check your internet",
+          [
+            { onPress: () => navigation.navigate("Home") }
+          ]
+        );
+      });
+  }, []);
 
   const styles = StyleSheet.create({
     container: {
       flex: 1,
       alignItems: "center",
-      backgroundColor: "black",
+      backgroundColor: "#000"
     },
-    title: { fontSize: 20, color: "#fff" },
-    image: { height: 200, width: 200 },
-    button: {
-      backgroundColor: "#a52a2a",
-      padding: 7,
-      marginTop: 10,
-    },
-    buttonText: {
-      color: "#fff",
+    title: {
       fontSize: 20,
+      color: "#fff"
     },
-    piker: {
+    image: {
+      height: 250,
+      width: 250
+    },
+    modalDropdown: {
       alignItems: "center",
       justifyContent: "center",
-      height: 50,
+      height: 100,
       width: 200,
-      color: "#292929",
-      backgroundColor: "#fff",
-    },
-    text: {
-      color: "#fff",
-      flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
-      padding: 50,
-    },
+      backgroundColor: "#2196f3",
+    }
   });
 
+  if (loadingValue)
+    return (
+      <View style={{ flex: 1, padding: 20 }}>
+        <ActivityIndicator />
+      </View>
+    );
+
+  if(errorValue !== null){
+    return (
+      <View style={styles.container}>
+        <Button
+        title="Go to Argentina's data"
+        onPress={() => navigation.navigate("Details", { name: "Argentina", code: "AR"})}
+      />
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>COVID-19 information:</Text>
+      <ModalDropdown
+        style={styles.modalDropdown}
+        onSelect={(key, value) => navigation.navigate("Details", { name: value, code: countriesValue[key].ISO2}) }
+        defaultValue={"SELECT COUNTRY HERE"}
+        options={countriesToString}
+     />
       <Image source={image} style={styles.image} />
-      <Text style={styles.text}>Select the desired country:</Text>
-      <Picker
-        style={styles.piker}
-        selectedValue={selectedValue}
-        onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
-      >
-        <Picker.Item label="Argentina" value="Argentina" />
-        <Picker.Item label="Afganistan" value="Afganistan" />
-        <Picker.Item label="Brasil" value="Brasil" />
-      </Picker>
       <Button
-        title="Go to Details"
-        onPress={() => navigation.navigate("Details")}
+        title="Go to Argentina's data"
+        onPress={() => navigation.navigate("Details", { name: "Argentina", code: "AR"})}
       />
+
+      {
+        (favCountryISOList !== null) && (
+          <li> <Button
+            title=" Countries Favorites"
+            onPress={() => navigation.navigate("Favorites", { favCountries:favCountryISOList})}
+          /></li>
+        )
+      }
     </View>
   );
 };
+
 
 export default Home;

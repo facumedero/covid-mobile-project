@@ -1,0 +1,9 @@
+version: '3'
+services:
+  node:
+    build:
+      context: .
+    volumes:
+      - .:/app
+    command: npm start
+    network_mode: host
